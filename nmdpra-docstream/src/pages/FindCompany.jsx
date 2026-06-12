@@ -22,10 +22,16 @@ export default function FindCompany() {
   };
 
   if (selected) {
+    const isMobile = window.innerWidth <= 768;
     return (
       <Card>
         <BackBtn onClick={() => setSelected(null)} />
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <div style={{
+          display: isMobile ? 'flex' : 'grid',
+          flexDirection: isMobile ? 'column' : 'row',
+          gridTemplateColumns: isMobile ? undefined : '1fr 1fr',
+          gap: '16px',
+        }}>
           <div>
             <div style={{ fontSize: '12px', color: '#888', marginBottom: '4px' }}>Taken Over By:</div>
             <InfoField value={selected.takenOverBy || 'Nil'} highlight={!!selected.takenOverBy} />
@@ -46,13 +52,13 @@ export default function FindCompany() {
         <div style={{ marginTop: '20px', textAlign: 'center' }}>
           <div style={{ fontSize: '14px', fontWeight: '600', marginBottom: '10px' }}>Map:</div>
           <div style={{
-            width: '100%', height: '300px', borderRadius: '12px', overflow: 'hidden',
+            width: '100%', height: isMobile ? '250px' : '300px', borderRadius: '12px', overflow: 'hidden',
             background: '#e8f4f8', display: 'flex', alignItems: 'center', justifyContent: 'center',
             border: '1px solid #ddd',
           }}>
             <iframe
               title="map"
-              width="100%" height="300"
+              width="100%" height={isMobile ? '250' : '300'}
               style={{ border: 0, borderRadius: '12px' }}
               loading="lazy"
               src={`https://maps.google.com/maps?q=${selected.coordinates?.lat || 12.0022},${selected.coordinates?.lng || 8.5919}&z=15&output=embed`}

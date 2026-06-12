@@ -1,14 +1,16 @@
 import React from 'react';
 
 export function Modal({ title, children, onClose }) {
+  const isMobile = window.innerWidth <= 768;
   return (
     <div style={{
       position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)',
       display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
+      padding: isMobile ? '20px' : '0',
     }}>
       <div style={{
-        background: '#fff', borderRadius: '16px', padding: '32px',
-        minWidth: '320px', maxWidth: '480px', width: '90%',
+        background: '#fff', borderRadius: '16px', padding: isMobile ? '24px' : '32px',
+        minWidth: '320px', maxWidth: '90%', width: isMobile ? '100%' : '480px',
         boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
         textAlign: 'center',
       }}>

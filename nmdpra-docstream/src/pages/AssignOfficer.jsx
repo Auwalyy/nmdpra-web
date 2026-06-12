@@ -48,34 +48,60 @@ export default function AssignOfficer() {
       {loading ? <Loader /> : officers.length === 0 ? (
         <p style={{ color: '#888' }}>No eligible officers found.</p>
       ) : (
-        officers.map(o => (
-          <div key={o._id} style={{
-            display: 'grid', gridTemplateColumns: '1fr 1fr 140px 100px',
-            alignItems: 'center', gap: '16px',
-            padding: '16px 0', borderBottom: '1px solid #f0f0f0',
-          }}>
-            <span style={{ fontSize: '14px' }}>{o.name}</span>
-            <span style={{ fontSize: '13px', color: '#666' }}>Senior Manager</span>
-            <div style={{
-              padding: '6px 14px', borderRadius: '20px',
-              background: o.isActive ? '#e8f5e8' : '#ffebee',
-              color: o.isActive ? '#2d7a2d' : '#c62828',
-              fontSize: '13px', fontWeight: '600', textAlign: 'center',
+        officers.map(o => {
+          const isMobile = window.innerWidth <= 768;
+          return (
+            <div key={o._id} style={{
+              display: isMobile ? 'flex' : 'grid',
+              gridTemplateColumns: isMobile ? undefined : '1fr 1fr 140px 100px',
+              flexDirection: isMobile ? 'column' : 'row',
+              alignItems: isMobile ? 'flex-start' : 'center',
+              gap: isMobile ? '8px' : '16px',
+              padding: '16px 0',
+              borderBottom: '1px solid #f0f0f0',
             }}>
-              {o.isActive ? 'Active' : 'On Leave'}
+              <div>
+                <div style={{ fontSize: '12px', color: '#888', marginBottom: '4px' }}>Name</div>
+                <span style={{ fontSize: '14px' }}>{o.name}</span>
+              </div>
+              <div>
+                <div style={{ fontSize: '12px', color: '#888', marginBottom: '4px' }}>Title</div>
+                <span style={{ fontSize: '13px', color: '#666' }}>Senior Manager</span>
+              </div>
+              <div>
+                <div style={{ fontSize: '12px', color: '#888', marginBottom: '4px' }}>Status</div>
+                <div style={{
+                  padding: '6px 14px',
+                  borderRadius: '20px',
+                  background: o.isActive ? '#e8f5e8' : '#ffebee',
+                  color: o.isActive ? '#2d7a2d' : '#c62828',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  textAlign: 'center',
+                }}>
+                  {o.isActive ? 'Active' : 'On Leave'}
+                </div>
+              </div>
+              <button
+                onClick={() => o.isActive && handleAssign(o)}
+                disabled={!o.isActive}
+                style={{
+                  padding: '8px 16px',
+                  background: o.isActive ? '#2d7a2d' : '#ccc',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: o.isActive ? 'pointer' : 'not-allowed',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  width: isMobile ? '100%' : 'auto',
+                }}
+              >
+                Assign
+              </button>
             </div>
-            <button
-              onClick={() => o.isActive && handleAssign(o)}
-              disabled={!o.isActive}
-              style={{
-                padding: '8px 16px', background: o.isActive ? '#2d7a2d' : '#ccc',
-                color: '#fff', border: 'none', borderRadius: '8px',
-                cursor: o.isActive ? 'pointer' : 'not-allowed',
-                fontSize: '13px', fontWeight: '600',
-              }}
-            >Assign</button>
-          </div>
-        ))
+          );
+        })
       )}
     </Card>
   );

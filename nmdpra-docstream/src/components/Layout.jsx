@@ -52,8 +52,16 @@ export default function Layout({ children, activeNav, navItems, onNav }) {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const [showNotifs, setShowNotifs] = useState(false);
+  const [showMobileNav, setShowMobileNav] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const notifRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     fetchNotifications();
@@ -97,15 +105,65 @@ export default function Layout({ children, activeNav, navItems, onNav }) {
   const handleLogout = () => { logout(); navigate('/login'); };
 
   return (
-    <div style={{ display: 'flex', height: '100vh', background: '#f5f5f5' }}>
+    <div style={{ display: 'flex', height: '100vh', background: '#f5f5f5', position: 'relative' }}>
+      {/* Mobile menu button */}
+      {isMobile && (
+        <button
+          onClick={() => setShowMobileNav(!showMobileNav)}
+          style={{
+            position: 'absolute',
+            left: '12px',
+            top: '12px',
+            zIndex: 50,
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            width: '40px',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2d7a2d" strokeWidth="2.5">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+      )}
+
+      {/* Overlay for mobile nav */}
+      {isMobile && showMobileNav && (
+        <div
+          onClick={() => setShowMobileNav(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.4)',
+            zIndex: 15,
+          }}
+        />
+      )}
+
       {/* Sidebar */}
-      <div style={{
-        width: '270px', minWidth: '270px',
-        background: '#fff',
-        boxShadow: '2px 0 8px rgba(0,0,0,0.06)',
-        display: 'flex', flexDirection: 'column',
-        zIndex: 10,
-      }}>
+      <div
+        style={{
+          width: isMobile ? '100%' : '270px',
+          minWidth: isMobile ? 'auto' : '270px',
+          background: '#fff',
+          boxShadow: '2px 0 8px rgba(0,0,0,0.06)',
+          display: isMobile && !showMobileNav ? 'none' : 'flex',
+          flexDirection: 'column',
+          zIndex: isMobile ? 20 : 10,
+          position: isMobile ? 'fixed' : 'static',
+          left: 0,
+          top: 0,
+          height: isMobile ? '100vh' : 'auto',
+          maxHeight: isMobile ? '100vh' : 'auto',
+          overflow: isMobile ? 'auto' : 'visible',
+        }}
+      >
         <Logo />
         <div style={{ padding: '20px 16px', flex: 1 }}>
           {navItems.map(item => (
@@ -113,79 +171,170 @@ export default function Layout({ children, activeNav, navItems, onNav }) {
               key={item.key}
               label={item.label}
               active={activeNav === item.key}
-              onClick={() => onNav(item.key)}
+              onClick={() => {
+                onNav(item.key);
+                if (isMobile) setShowMobileNav(false);
+              }}
             />
           ))}
         </div>
       </div>
 
       {/* Main area */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        marginLeft: isMobile ? 0 : 0,
+      }}>
         {/* Top bar */}
         <div style={{
           background: '#fff',
-          padding: '0 28px',
+          padding: isMobile ? '0 16px' : '0 28px',
           height: '64px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
           zIndex: 9,
+          marginLeft: isMobile && showMobileNav ? '0' : '0',
         }}>
-          <h1 style={{ fontSize: '20px', fontWeight: '700' }}>
+          <h1 style={{
+            fontSize: isMobile ? '16px' : '20px',
+            fontWeight: '700',
+            marginLeft: isMobile ? '44px' : '0',
+            flex: 1,
+          }}>
             {ROLE_LABELS[user?.role] || 'Dashboard'}
           </h1>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            {/* Active toggle */}
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: '8px',
-              background: '#2d7a2d', borderRadius: '20px',
-              padding: '6px 14px', color: '#fff', fontSize: '13px', fontWeight: '600',
-            }}>
-              Active
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: isMobile ? '8px' : '16px',
+            flexWrap: isMobile ? 'wrap' : 'nowrap',
+          }}>
+            {/* Active toggle - hide on very small screens */}
+            {!isMobile && (
               <div style={{
-                width: '28px', height: '16px', background: '#fff', borderRadius: '8px',
-                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: '#2d7a2d',
+                borderRadius: '20px',
+                padding: '6px 14px',
+                color: '#fff',
+                fontSize: '13px',
+                fontWeight: '600',
               }}>
+                Active
                 <div style={{
-                  width: '12px', height: '12px', background: '#2d7a2d', borderRadius: '50%',
-                  position: 'absolute', right: '2px', top: '2px',
-                }}/>
+                  width: '28px',
+                  height: '16px',
+                  background: '#fff',
+                  borderRadius: '8px',
+                  position: 'relative',
+                }}>
+                  <div style={{
+                    width: '12px',
+                    height: '12px',
+                    background: '#2d7a2d',
+                    borderRadius: '50%',
+                    position: 'absolute',
+                    right: '2px',
+                    top: '2px',
+                  }} />
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Notification bell */}
-            <div ref={notifRef} style={{ position: 'relative', cursor: 'pointer' }}>
-              <div onClick={handleBellClick} style={{
-                width: '38px', height: '38px', background: '#2d7a2d', borderRadius: '50%',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
+            <div
+              ref={notifRef}
+              style={{
+                position: 'relative',
+                cursor: 'pointer',
+              }}
+            >
+              <div
+                onClick={handleBellClick}
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  background: '#2d7a2d',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                  <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
                 </svg>
               </div>
               {notifications.length > 0 && (
                 <div style={{
-                  position: 'absolute', top: '-4px', right: '-4px',
-                  background: '#e53935', color: '#fff', borderRadius: '50%',
-                  width: '18px', height: '18px', fontSize: '10px', fontWeight: '700',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                }}>{notifications.length}</div>
+                  position: 'absolute',
+                  top: '-4px',
+                  right: '-4px',
+                  background: '#e53935',
+                  color: '#fff',
+                  borderRadius: '50%',
+                  width: '18px',
+                  height: '18px',
+                  fontSize: '10px',
+                  fontWeight: '700',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {notifications.length}
+              </div>
               )}
               {showNotifs && (
-                <div style={{
-                  position: 'absolute', right: 0, top: '46px',
-                  background: '#fff', borderRadius: '10px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-                  minWidth: '280px', zIndex: 100, overflow: 'hidden',
-                }}>
-                  <div style={{ padding: '10px 14px', fontWeight: '700', fontSize: '13px', borderBottom: '1px solid #eee' }}>Notifications</div>
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: '46px',
+                    background: '#fff',
+                    borderRadius: '10px',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+                    minWidth: isMobile ? '90vw' : '280px',
+                    maxWidth: '90vw',
+                    zIndex: 100,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: '10px 14px',
+                      fontWeight: '700',
+                      fontSize: '13px',
+                      borderBottom: '1px solid #eee',
+                    }}
+                  >
+                    Notifications
+                  </div>
                   {notifications.length === 0 ? (
-                    <div style={{ padding: '14px', fontSize: '13px', color: '#888' }}>No new notifications</div>
+                    <div style={{ padding: '14px', fontSize: '13px', color: '#888' }}>
+                      No new notifications
+                    </div>
                   ) : (
                     notifications.map(n => (
-                      <div key={n._id} style={{ padding: '10px 14px', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>
-                        <span style={{ fontWeight: '600' }}>Vehicle Request</span> ({n.tripType}) was {statusLabel(n.status)}
+                      <div
+                        key={n._id}
+                        style={{
+                          padding: '10px 14px',
+                          borderBottom: '1px solid #f0f0f0',
+                          fontSize: '13px',
+                        }}
+                      >
+                        <span style={{ fontWeight: '600' }}>Vehicle Request</span> ({n.tripType}) was{
+                        ' '}
+                        {statusLabel(n.status)}
                       </div>
                     ))
                   )}
@@ -198,30 +347,64 @@ export default function Layout({ children, activeNav, navItems, onNav }) {
               <div
                 onClick={() => setShowMenu(!showMenu)}
                 style={{
-                  width: '38px', height: '38px', background: '#e0e0e0', borderRadius: '50%',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+                  width: '38px',
+                  height: '38px',
+                  background: '#e0e0e0',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
                 }}
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
                 </svg>
               </div>
               {showMenu && (
-                <div style={{
-                  position: 'absolute', right: 0, top: '46px',
-                  background: '#fff', borderRadius: '10px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-                  padding: '8px', minWidth: '160px', zIndex: 100,
-                }}>
-                  <div style={{ padding: '8px 12px', fontSize: '13px', color: '#666', borderBottom: '1px solid #eee', marginBottom: '4px' }}>
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: '46px',
+                    background: '#fff',
+                    borderRadius: '10px',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+                    padding: '8px',
+                    minWidth: '160px',
+                    zIndex: 100,
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: '8px 12px',
+                      fontSize: '13px',
+                      color: '#666',
+                      borderBottom: '1px solid #eee',
+                      marginBottom: '4px',
+                    }}
+                  >
                     <div style={{ fontWeight: '600', color: '#1a1a1a' }}>{user?.name}</div>
                     <div>{user?.role}</div>
                   </div>
-                  <button onClick={handleLogout} style={{
-                    width: '100%', padding: '8px 12px', background: 'none',
-                    border: 'none', color: '#e53935', fontSize: '13px', fontWeight: '600',
-                    cursor: 'pointer', textAlign: 'left', borderRadius: '6px',
-                  }}>Logout</button>
+                  <button
+                    onClick={handleLogout}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      background: 'none',
+                      border: 'none',
+                      color: '#e53935',
+                      fontSize: '13px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      borderRadius: '6px',
+                    }}
+                  >
+                    Logout
+                  </button>
                 </div>
               )}
             </div>
@@ -229,7 +412,13 @@ export default function Layout({ children, activeNav, navItems, onNav }) {
         </div>
 
         {/* Content */}
-        <div style={{ flex: 1, overflow: 'auto', padding: '24px' }}>
+        <div
+          style={{
+            flex: 1,
+            overflow: 'auto',
+            padding: isMobile ? '16px' : '24px',
+          }}
+        >
           {children}
         </div>
       </div>
