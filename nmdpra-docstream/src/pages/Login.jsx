@@ -107,11 +107,11 @@ const styles = {
     flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
   },
   leftPanel: {
-    flex: window.innerWidth <= 768 ? '0 0 40vh' : 1,
+    flex: 1,
     background: `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), 
       url('https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800') center/cover no-repeat`,
     position: 'relative',
-    minHeight: window.innerWidth <= 768 ? '40vh' : 'auto',
+    display: window.innerWidth <= 768 ? 'none' : 'block',
   },
   overlay: {
     position: 'absolute', inset: 0,
