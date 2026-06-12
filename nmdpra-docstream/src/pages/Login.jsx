@@ -14,10 +14,15 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      await login(form.staffId, form.email, form.password);
+      await login(form.staffId, form.department, form.email, form.password);
       navigate('/');
     } catch (e) {
-      setError(e.response?.data?.message || 'Login failed');
+      setError(
+        e.response?.data?.message ||
+        e.response?.statusText ||
+        e.message ||
+        'Login failed',
+      );
     } finally {
       setLoading(false);
     }
