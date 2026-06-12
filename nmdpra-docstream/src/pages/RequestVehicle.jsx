@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Card, BackBtn, GreenBtn, GoldBtn, Input, ApprovalRow, Modal, IncomingRequestCard, Loader } from '../components/UI';
-import { useAuth } from '../context/AuthContext';
+import { Card, BackBtn, GreenBtn, GoldBtn, Input, ApprovalRow, Modal, IncomingRequestCard, Loader } from '../components/UI.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 
 export default function RequestVehicle({ isApprover, role }) {
   const { user } = useAuth();

@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import Layout from '../components/Layout';
-import FindCompany from './FindCompany';
-import RequestVehicle from './RequestVehicle';
-import InventoryForm from './InventoryForm';
-import RequestItems from './RequestItems';
-import AddFacility from './AddFacility';
-import AssignOfficer from './AssignOfficer';
-import EditDriverInfo from './EditDriverInfo';
-import StaffManagement from './StaffManagement';
-import ActivityLog from './ActivityLog';
+import { useAuth } from '../context/AuthContext.jsx';
+import Layout from '../components/Layout.jsx';
+import FindCompany from './FindCompany.jsx';
+import RequestVehicle from './RequestVehicle.jsx';
+import InventoryForm from './InventoryForm.jsx';
+import RequestItems from './RequestItems.jsx';
+import AddFacility from './AddFacility.jsx';
+import AssignOfficer from './AssignOfficer.jsx';
+import EditDriverInfo from './EditDriverInfo.jsx';
+import StaffManagement from './StaffManagement.jsx';
+import ActivityLog from './ActivityLog.jsx';
 
 const NAV_BY_ROLE = {
   staff: [

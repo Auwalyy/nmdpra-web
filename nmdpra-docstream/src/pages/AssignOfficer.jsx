@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Card, GreenBtn, BackBtn, Loader } from '../components/UI';
+import { Card, GreenBtn, BackBtn, Loader } from '../components/UI.jsx';
 
 export default function AssignOfficer() {
   const [officers, setOfficers] = useState([]);

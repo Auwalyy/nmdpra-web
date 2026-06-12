@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Card, GreenBtn, BackBtn, Input, Loader } from '../components/UI';
+import { Card, GreenBtn, BackBtn, Input, Loader } from '../components/UI.jsx';
 
 export default function EditDriverInfo() {
   const [requests, setRequests] = useState([]);

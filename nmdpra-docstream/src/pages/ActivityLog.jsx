@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Card, BackBtn, Loader } from '../components/UI';
+import { Card, BackBtn, Loader } from '../components/UI.jsx';
 
 export default function ActivityLog() {
   const [logs, setLogs] = useState([]);

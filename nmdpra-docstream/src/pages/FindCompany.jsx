@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Card, BackBtn, Input, GreenBtn, InfoField, Loader } from '../components/UI';
+import { Card, BackBtn, Input, GreenBtn, InfoField, Loader } from '../components/UI.jsx';
 
 export default function FindCompany() {
   const [query, setQuery] = useState('');

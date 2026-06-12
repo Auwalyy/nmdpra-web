@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Card, GreenBtn, Input, Modal } from '../components/UI';
-import { useAuth } from '../context/AuthContext';
+import { Card, GreenBtn, Input, Modal } from '../components/UI.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const defaultChecklist = [
   'Fire Extinguisher', 'Safety Signs', 'First Aid Kit',

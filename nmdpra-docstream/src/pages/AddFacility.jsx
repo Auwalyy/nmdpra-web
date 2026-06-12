@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Card, GreenBtn, GoldBtn, Input, Modal, BackBtn } from '../components/UI';
+import { Card, GreenBtn, GoldBtn, Input, Modal, BackBtn } from '../components/UI.jsx';
 
 export default function AddFacility() {
   const [view, setView] = useState('choose'); // choose | general | takeover

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Card, GreenBtn, Input, Modal, StatusBadge, Loader } from '../components/UI';
-import { useAuth } from '../context/AuthContext';
+import { Card, GreenBtn, Input, Modal, StatusBadge, Loader } from '../components/UI.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 
 export default function RequestItems() {
   const { user } = useAuth();

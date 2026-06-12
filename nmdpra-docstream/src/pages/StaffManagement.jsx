@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Card, GreenBtn, Input, Modal, Loader } from '../components/UI';
+import { Card, GreenBtn, Input, Modal, Loader } from '../components/UI.jsx';
 
 const ROLES = ['staff', 'rom_supervisor', 'cooperate', 'vehicle_officer', 'regional_coordinator', 'supervisor', 'ict'];
 const ROLE_LABELS = {
