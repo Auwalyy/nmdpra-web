@@ -107,3 +107,8 @@ img, video, svg {
   h3 { font-size: 18px !important; }
   p { font-size: 15px !important; }
 }
+
+@media print {
+  body > *:not(.printable-table) { display: none !important; }
+  .printable-table { display: block !important; }
+}

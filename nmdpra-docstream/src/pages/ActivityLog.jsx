@@ -40,7 +40,11 @@ export default function ActivityLog() {
               {logs.map((log, i) => (
                 <tr key={log._id || i} style={{ borderBottom: '1px solid #f0f0f0' }}>
                   <td style={{ padding: '14px 16px', fontSize: '13px', color: '#555' }}>
-                    {new Date(log.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long' })}
+                    {new Date(log.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    {' '}
+                    <span style={{ color: '#888', fontSize: '12px' }}>
+                      {new Date(log.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+                    </span>
                   </td>
                   <td style={{ padding: '14px 16px', fontSize: '13px', color: '#555' }}>{log.staffName}</td>
                   <td style={{ padding: '14px 16px', fontSize: '13px', color: '#555' }}>
