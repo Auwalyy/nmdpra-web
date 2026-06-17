@@ -178,9 +178,21 @@ export default function RequestItems() {
         <div style={{ marginTop: '32px' }}>
           <h4 style={{ fontSize: '14px', fontWeight: '600', marginBottom: '12px', paddingTop: '16px', borderTop: '1px solid #eee' }}>My Requests</h4>
           {myRequests.map(r => (
-            <div key={r._id} style={{ padding: '12px 16px', borderRadius: '10px', background: '#f5f5f5', marginBottom: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '13px', color: '#555' }}>{r.items?.map(i => i.description || i.name).join(', ')}</span>
-              <StatusBadge status={r.status} />
+            <div key={r._id} style={{ padding: '14px 16px', borderRadius: '12px', background: '#f9f9f9', marginBottom: '10px', border: '1px solid #eee' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px' }}>
+                <div>
+                  <div style={{ fontWeight: '700', fontSize: '14px', color: '#1a1a1a' }}>
+                    {r.items?.[0]?.description || 'Item Request'}
+                    {r.items?.length > 1 && <span style={{ fontWeight: '400', fontSize: '12px', color: '#888', marginLeft: '6px' }}>+{r.items.length - 1} more</span>}
+                  </div>
+                  {r.officerName && <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>{r.officerName}{r.division ? ` · ${r.division}` : ''}</div>}
+                </div>
+                <StatusBadge status={r.status} />
+              </div>
+              {r.items?.slice(1).map((item, i) => (
+                <div key={i} style={{ fontSize: '12px', color: '#777', marginTop: '3px' }}>• {item.description}{item.quantity ? ` × ${item.quantity}` : ''}{item.unit ? ` ${item.unit}` : ''}</div>
+              ))}
+              {r.createdAt && <div style={{ fontSize: '11px', color: '#aaa', marginTop: '6px' }}>{new Date(r.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} {new Date(r.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</div>}
             </div>
           ))}
         </div>
