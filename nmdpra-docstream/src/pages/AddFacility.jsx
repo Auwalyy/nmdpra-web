@@ -17,13 +17,20 @@ export default function AddFacility() {
   const f = (k) => v => setForm(p => ({ ...p, [k]: v }));
 
   const fetchFacilities = () =>
-    axios.get('/api/facilities').then(r => setFacilities(r.data)).catch(() => {});
+    axios.get('/api/facilities').then(r => setFacilities([...r.data].reverse())).catch(() => {});
 
   useEffect(() => { if (view === 'list') fetchFacilities(); }, [view]);
 
   const submitFacility = async () => {
     try {
-      await axios.post('/api/facilities', form);
+      await axios.post('/api/facilities', {
+        retailOutlet:        form.retailOutlet,
+        retailOutletAddress: form.retailOutletAddress,
+        pmsOpeningStock:     Number(form.pmsOpeningStock),
+        productReceived:     Number(form.productReceived),
+        priceRange:          form.priceRange,
+        pumpDispensingLevel: Number(form.pumpDispensingLevel),
+      });
       setShowModal(true);
     } catch { alert('Error submitting facility'); }
   };
